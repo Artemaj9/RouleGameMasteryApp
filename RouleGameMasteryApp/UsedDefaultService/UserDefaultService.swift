@@ -29,5 +29,5 @@ final class UserDefaultService {
 }
 
 enum UDKeys: String {
-  case records
+  case calculations
 }

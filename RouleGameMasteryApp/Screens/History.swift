@@ -1,27 +1,58 @@
 //
 //  History.swift
-//  RouleGameMasteryApp
-//
-//  Created by Artem on 22.03.2025.
 //
 
 import SwiftUI
 
 struct History: View {
+  @EnvironmentObject var nm: NavigationStateManager
+  @EnvironmentObject var vm: GameViewModel
+  
   let radius: Double  = 30
     var body: some View {
-      VStack(spacing: 0) {
-        Color.green
-          .height(200)
-        
-        UnevenRoundedRectangle(topLeadingRadius: radius, topTrailingRadius: radius)
-          .fill(.blue.gradient)
-          .padding(.top, -radius*2)
+      ZStack {
+      
+        Image(.mbg)
+          .backgroundFill()
+        topSection
       }
-      .ignoresSafeArea()
+      .navigationBarBackButtonHidden()
     }
+  
+  private var topSection: some View {
+    Rectangle()
+      .fill(Color(hex: "720909"))
+      .height(130)
+      .overlay {
+        ZStack {
+          Text("Calculation History")
+            .rouleFont(size: 22, style: .interB, color: .white)
+          HStack {
+            Button {
+              nm.path = []
+            } label: {
+              HStack {
+                Image(.arrow)
+                  .resizableToFit(height: 20)
+                
+                Text("Back")
+                  .rouleFont(size: 17, style: .interR, color: .white)
+              }
+            }
+            
+            Spacer()
+          }
+          .padding(.leading)
+        }
+        .yOffset(24)
+      }
+      .yOffset(-vm.h*0.46)
+
+  }
 }
 
 #Preview {
     History()
+    .nm
+    .vm
 }

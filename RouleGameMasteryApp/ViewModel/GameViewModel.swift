@@ -1,17 +1,18 @@
 //
 //  GameViewModel.swift
 //
+// swiftlint:disable all
 
 import SwiftUI
 import Combine
-import CoreImage
+//import CoreImage
 import CoreImage.CIFilterBuiltins
 
 final class GameViewModel: ObservableObject {
   @Published var size: CGSize = CGSize(width: 393, height: 851)
   @Published var isSplash = true
   @Published var isTestResult = false
-  @AppStorage("isWelcome") var isWelcome = true
+  @Published var isWelcome = true
   
   // CORE IMAGE
   let welcbg = CIImage(image: UIImage(named: "welcroulebg")!)!
@@ -23,8 +24,8 @@ final class GameViewModel: ObservableObject {
   @Published var angle: Float = 3
   
   func twirlDistort() {
-      let filter = CIFilter.twirlDistortion()
-      filter.inputImage = welcbg
+    let filter = CIFilter.twirlDistortion()
+    filter.inputImage = welcbg
     filter.radius = radius
     filter.angle = angle
     filter.center = CGPoint(x: 291, y: 744)
@@ -33,6 +34,35 @@ final class GameViewModel: ObservableObject {
       self.filteredImage = UIImage(cgImage: cgimg)
     }
   }
+  
+  // MARK: CORE
+  @Published var bland: Int? = nil
+  @Published var bet: Int = 0
+  @Published var showCalculation = false
+  @Published var currentCalculation: Calculation? = Calculation(
+    bet: 10,
+    bland: 3,
+    success: 32.45,
+    win: 45,
+    expectedReturn: -50
+  )
+  
+  @Published var allCalculations: [Calculation] = []
+  
+  let blandStat: [(Double, coef: Int, color: Color, name: String)] = [
+    (0.4864, coef: 2, color: Color(hex: "FF0000"), name: "Red"),
+    (0.4864, coef: 2, color: Color(hex: "FF0000"), name: "Black"),
+    (0.4864, coef: 2, color: Color(hex: "0073A8"), name: "Odds"),
+    (0.4864, coef: 2, color: Color(hex: "0073A8"), name: "Evens"),
+    (0.3243, coef: 3, color: Color(hex: "3DB325"), name: "1-12"),
+    (0.3243, coef: 3, color: Color(hex: "3DB325"), name: "13-24"),
+    (0.3243, coef: 3 ,color: Color(hex: "3DB325"), name: "25-36"),
+    (0.0270, coef: 35, color: Color(hex: "E5A71F"), name: "Straight"),
+    (0.0541, coef: 17, color: Color(hex: "E5A71F"), name: "Split"),
+    (0.0811, coef: 11, color: Color(hex: "E5A71F"), name: "Street"),
+    (0.1081, coef: 8, color: Color(hex: "E5A71F"), name: "Square"),
+    (0.1620, coef: 5, color: Color(hex: "E5A71F"), name: "Six Line")
+  ]
  
   // MARK: GAME
   @Published var records = [0, 0, 0, 0, 0]
@@ -59,7 +89,7 @@ final class GameViewModel: ObservableObject {
   private var cancellables = Set<AnyCancellable>()
   
   init() {
-    records = UserDefaultService.shared.getStructs(forKey: UDKeys.records.rawValue) ?? Array(repeating: 0, count: 5)
+    allCalculations = UserDefaultService.shared.getStructs(forKey: UDKeys.calculations.rawValue) ?? []
   }
 
   func resetvm() {
@@ -94,6 +124,10 @@ final class GameViewModel: ObservableObject {
         twirlDistort()
       }
       .store(in: &cancellables)
+  }
+  
+  func percentString(_ number: Double?) -> String {
+    String(format: "%.2f", number ?? 0)
   }
   
   func setupLoadingTimer() {
