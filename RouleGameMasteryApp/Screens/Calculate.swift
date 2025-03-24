@@ -81,9 +81,7 @@ struct Calculate: View {
           .hPadding()
           .yOffset(-vm.h*0.17)
         simBtn
-
       }
-      
     }
   
   private var bg: some View {
@@ -140,7 +138,6 @@ struct Calculate: View {
             Text("\( vm.currentCalculation?.bet ?? 0)")
               .rouleFont(size: 16, style: .interB, color: .black)
           }
-        
       }
       
       Spacer()

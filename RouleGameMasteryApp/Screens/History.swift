@@ -47,7 +47,6 @@ struct History: View {
         .yOffset(24)
       }
       .yOffset(-vm.h*0.46)
-
   }
 }
 

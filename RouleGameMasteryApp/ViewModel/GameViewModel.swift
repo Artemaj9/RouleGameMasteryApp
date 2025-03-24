@@ -48,6 +48,8 @@ final class GameViewModel: ObservableObject {
   )
   
   @Published var allCalculations: [Calculation] = []
+  @Published var rotation: Double = 0
+  
   
   let blandStat: [(Double, coef: Int, color: Color, name: String)] = [
     (0.4864, coef: 2, color: Color(hex: "FF0000"), name: "Red"),
@@ -63,6 +65,18 @@ final class GameViewModel: ObservableObject {
     (0.1081, coef: 8, color: Color(hex: "E5A71F"), name: "Square"),
     (0.1620, coef: 5, color: Color(hex: "E5A71F"), name: "Six Line")
   ]
+  
+  let rouletteNumbers = [
+      21, 2, 25, 17, 34, 6, 27, 13, 36, 11,
+      30, 8, 23, 10, 5, 24, 16, 33, 1, 20,
+      14, 31, 9, 22, 18, 29, 7, 28, 12, 35,
+      3, 26, 0, 32, 15, 19, 4
+  ]
+  
+  
+  // Roullete
+  @Published var time = 0
+  
  
   // MARK: GAME
   @Published var records = [0, 0, 0, 0, 0]
@@ -105,6 +119,48 @@ final class GameViewModel: ObservableObject {
     currentQuestion = 1
   }
   
+  @Published var omega = 9.73*Double(Int.random(in:(27...36)))
+  @Published var currentAngle: Double = 0
+  @Published var rouleTime: Double = 0
+  @Published var startRadius: Double = 0
+  @Published var endRadius: Double = 0
+  @Published var currentRadius: Double = 0
+  let spinTime: Double = 4
+  
+  func resetRoule() {
+    omega = 9.73*Double(Int.random(in:(27...36)))
+    currentAngle = 0
+    rouleTime = 0
+    startRadius = 0
+    endRadius = 0
+    currentRadius = 0
+  }
+  
+  func setupRouleTimer() {
+    resetRoule()
+    let phi = Double(omega)*spinTime/2
+    let beta = 2*phi/(spinTime*spinTime)
+    startRadius = w*0.45
+    endRadius = w*0.3
+    currentRadius = startRadius
+    cancelLoadingTimer()
+    
+    Timer
+      .publish(every: 0.01, on: .main, in: .common)
+      .autoconnect()
+      .sink { [unowned self] _ in
+        if rouleTime < 4 {
+          rouleTime += 0.01
+          currentAngle = Double(omega)*rouleTime - pow(rouleTime, 2)*beta / 2
+          currentRadius = (1 - pow(max(0, rouleTime/2 - 1), 0.5)) * startRadius +  pow(max(0, rouleTime/2 - 1), 0.5)*endRadius
+        } else {
+          for item in cancellables {
+            item.cancel()
+          }
+        }
+      }
+      .store(in: &cancellables)
+  }
   
   func setupTwirlTimer() {
     cancelLoadingTimer()
