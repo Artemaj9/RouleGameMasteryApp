@@ -45,7 +45,6 @@ extension View {
       .env(object2)
   }
 
-  
   // for previews
   var vm: some View {
     self.environmentObject(GameViewModel())

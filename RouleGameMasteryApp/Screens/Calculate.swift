@@ -28,7 +28,7 @@ struct Calculate: View {
                 Image(.dredbg)
                   .resizableToFit(height: 35)
                   .overlay {
-                    Text(vm.percentString(vm.currentCalculation?.success) + "%")
+                    Text(vm.percentString((vm.currentCalculation?.success ?? 0)*100) + "%")
                       .rouleFont(size: 17, style: .interB, color: .white)
                   }
               }
@@ -61,7 +61,7 @@ struct Calculate: View {
               }
               .hPadding(40)
             }
-            .padding(.bottom, 50)
+            .padding(.bottom, vm.isSEight ? 32 : 50)
           }
           .overlay(.top) {
             Image(.statbg)
@@ -70,7 +70,6 @@ struct Calculate: View {
                 Text("Your choice")
                   .rouleFont(size: 16, style: .interR, color: .white)
                   .padding(.top, 4)
-                
               }
               .overlay {
                choiceStats
@@ -80,7 +79,9 @@ struct Calculate: View {
           }
           .hPadding()
           .yOffset(-vm.h*0.17)
+          .yOffsetIf(vm.isSEight, 48)
         simBtn
+          .yOffsetIf(vm.isSEight, 20)
       }
     }
   
@@ -101,6 +102,7 @@ struct Calculate: View {
           vm.allCalculations.insert(calculation, at: 0)
           UserDefaultService.shared.saveStructs(structs: vm.allCalculations, forKey: UDKeys.calculations.rawValue)
         }
+        vm.resetvm()
         vm.showCalculation = false
       } label: {
         Image(.xbtn)
@@ -109,6 +111,7 @@ struct Calculate: View {
       .xOffset(vm.w*0.4)
     }
     .yOffset(-vm.h*0.44)
+    .yOffsetIf(vm.isSEight, 56)
   }
   
   private var simBtn: some View {
@@ -117,6 +120,7 @@ struct Calculate: View {
         vm.allCalculations.insert(calculation, at: 0)
         UserDefaultService.shared.saveStructs(structs: vm.allCalculations, forKey: UDKeys.calculations.rawValue)
       }
+      vm.updateDefaultSelection()
       nm.path.append(.simulation)
     } label: {
       Image(.testbetbtn)

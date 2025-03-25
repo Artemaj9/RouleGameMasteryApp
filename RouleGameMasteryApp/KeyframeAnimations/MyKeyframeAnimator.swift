@@ -31,7 +31,6 @@ struct MyKeyframeAnimator<Root, Trigger: Equatable, Content: View>: View {
   
   var body: some View {
     TimelineView(.animation(paused: suspended)) { context in
-      let _ = print(Date.now.timeIntervalSince1970)
       let value = value(for: context.date)
       content(value)
         .onChange(of: isPaused(context.date)) { suspended = $0 }

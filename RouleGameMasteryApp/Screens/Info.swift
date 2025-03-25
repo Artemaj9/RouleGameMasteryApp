@@ -239,10 +239,10 @@ struct Info: View {
           }
           .padding(.leading)
         }
-        .yOffset(24)
+        .yOffset(36)
       }
       .yOffset(-vm.h*0.46)
-
+      .yOffsetIf(vm.isSEight, 44)
   }
 }
 

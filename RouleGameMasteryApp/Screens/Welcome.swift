@@ -44,13 +44,9 @@ struct Welcome: View {
             Image(.welcdata)
               .resizableToFit()
               .padding(30)
-            //            .opacity(stage == 1 ? 0 : 1)
-            //            .animation(.interpolatingSpring(stiffness: 30, damping: 8).delay(0.1), value: stage)
           }
-          
           .transition(.ripple(location: CGPoint(x: 0, y: 0)))
           .ignoresSafeArea()
-          
         }
       }
       .animation(.easeInOut(duration: 1), value: stage)
@@ -109,6 +105,7 @@ struct Welcome: View {
     .hPadding()
     .multilineTextAlignment(.center)
     .yOffset(vm.h*0.23)
+    .yOffsetIf(vm.isSEight, -40)
   }
   
   private var firstHeader: some View {
@@ -118,6 +115,7 @@ struct Welcome: View {
       .xOffset(shakes == 1 ? 0 : -vm.w)
       .animation(.interpolatingSpring(stiffness: 30, damping: 5), value: shakes)
       .yOffset(-vm.h*0.35)
+      .yOffsetIf(vm.isSEight, 20)
   }
   
   private var nextBtn: some View {
@@ -144,6 +142,7 @@ struct Welcome: View {
         }
     }
     .yOffset(vm.h*0.4)
+    .yOffsetIf(vm.isSEight, -40)
   }
   
   private var startBtn: some View {
@@ -152,21 +151,15 @@ struct Welcome: View {
     } label: {
       Image(.welcbtn)
         .resizableToFit(height: 54)
-        .overlayMask {
-          ZStack {
-            LiquidMetal()
-              .opacity(0.2)
-          }
-        }
         .overlay {
           Text("Start")
             .rouleFont(size: 17, style: .interB, color: Color(hex: "#020202"))
         }
     }
     .xOffset(stage == 1 ? -vm.w : 0)
-    .rotation3DEffect(.degrees(stage == 1 ? 90 : 0), axis: (x: 1, y: 0.4, z: 0.2))
-    .animation(.interpolatingSpring(stiffness: 30, damping: 5).delay(0.4), value: stage)
+    .animation(.smooth, value: stage)
     .yOffset(vm.h*0.4)
+    .yOffsetIf(vm.isSEight, -40)
   }
   
   private var nextbtnAnimator: some View {

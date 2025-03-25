@@ -12,6 +12,7 @@ enum CustomFont: String {
   case ibarraRealNovaSI = "IbarraRealNova-SemiBoldItalic"
   case cambayR = "Cambay-Regular"
   case cambayB = "Cambay-Bold"
+  case scheherezade = "Scheherazade-Bold"
   
 }
 
@@ -20,10 +21,3 @@ extension Font {
     Font.custom(font.rawValue, size: size)
   }
 }
-
-//enum StyleText: String {
-//  case interR, interM, interB,
-//       ibarraRealNova,inarraRealNovaSI,
-//       cambayR, cambayB
-//}
-//

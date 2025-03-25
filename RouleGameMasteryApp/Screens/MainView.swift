@@ -17,7 +17,7 @@ struct MainView: View {
           .resizableToFit()
           .overlay(.top) {
             Image(.betfield)
-              .resizableToFit(height: 54)
+              .resizableToFit(height: vm.isSEight ? 50 : 54)
               .overlay(.trailing) {
                 Image(.arrows)
                   .resizableToFit(height: 24)
@@ -25,8 +25,12 @@ struct MainView: View {
               }
               .overlay {
                 Text("\(vm.bet)")
+                  .rouleFont(size: 17, style: .interM, color: .black)
               }
               .onTapGesture {
+                if vm.bet == 0 {
+                  vm.bet = 10
+                }
                 showPicker = true
               }
               .yOffset(vm.h*0.1)
@@ -41,42 +45,50 @@ struct MainView: View {
               yellowrow
               squareline
             }
+            .scaleEffect(vm.isSEight ? 0.98 : 1)
             .overlay(alignment: .bottom) {
               calculatebtn
             }
             .yOffset(vm.h*0.05)
+            .yOffsetIf(vm.isSEight, -24)
           }
           .yOffset(vm.h*0.05)
+          .yOffsetIf(vm.isSEight, 24)
         
         if vm.showCalculation {
           Calculate()
         }
           
       }
+      .onAppear {
+        vm.resetvm()
+      }
       .sheet(isPresented: $showPicker) {
         ZStack {
           VStack(spacing: 0) {
-            Text("Bet Amount")
-              .rouleFont(size: 20, style: .interB, color: .white)
-              .foregroundStyle(.white)
+           
+              Text("Bet Amount")
+                .rouleFont(size: 20, style: .interB, color: .white)
+                .foregroundStyle(.white)
+           // }
+            
             Picker("Select a Bet", selection: $vm.bet) {
-              ForEach(1...1000, id: \.self) { number in
+              ForEach(0...1000, id: \.self) { number in
                 Text("\(number)").tag(number)
                   .foregroundStyle(.white)
               }
             }
             .pickerStyle(.wheel)
             .frame(height: 180)
-            
-            
+                
             okBtn
-              .offset(y: 12)
+              .offset(y: vm.isSEight ? -24 : 12)
             
           }
         }
         .offset(y: 20)
         .vPadding()
-        .presentationDetents([.fraction(0.35)])
+        .presentationDetents([.fraction(vm.isSEight ? 0.4 : 0.35)])
         .background(BackgroundClearView(color: Color(hex: "808080").opacity(0.1)))
         .background(.ultraThinMaterial)
       }
@@ -110,7 +122,7 @@ struct MainView: View {
             .rouleFont(size: 17, style: .interB, color: Color(hex: "#020202"))
         }
     }
-  //  .yOffset(vm.h*0.4)
+
   }
   private var bg: some View {
     Image(.mbg)
@@ -137,6 +149,7 @@ struct MainView: View {
     }
     .hPadding(24)
     .yOffset(-vm.h*0.42)
+    .yOffsetIf(vm.isSEight, 44)
   }
     
   private var redblackrow: some View {
@@ -158,7 +171,6 @@ struct MainView: View {
       .opacity(vm.bland == nil || vm.bland == 1 ? 1 : 0.5)
     }
   }
-  
   
   private var bluerow: some View {
     HStack {
@@ -281,6 +293,8 @@ struct MainView: View {
     .opacity(vm.bland == nil || vm.bet == 0 ? 0.5 : 1)
     .disabled(vm.bland == nil || vm.bet == 0)
     .yOffset(vm.h*0.12)
+    .animation(.easeInOut, value: vm.bland == nil || vm.bet == 0)
+    .yOffsetIf(vm.isSEight, -20)
   }
 }
 
