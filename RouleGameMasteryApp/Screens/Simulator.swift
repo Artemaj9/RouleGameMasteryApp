@@ -68,11 +68,11 @@ struct Simulator: View {
           Image(vm.currentNumber % 2 == 0 ? .eres : .ores)
             .resizableToFit(height: 200)
         } else {
-          Image(vm.currentColor == "Red" ? .rres : .bres)
+          Image(vm.currentNumber == 0 ? .zres : (vm.currentColor == "Red" ? .rres : .bres))
             .resizableToFit(height: 200)
             .overlay(.trailing) {
               RoundedRectangle(cornerRadius: 6)
-                .fill( Color(hex: vm.currentColor == "Red" ? "C00000" : "0C0C0C"))
+                .fill( Color(hex: vm.currentNumber == 0 ? "00BD3999" : (vm.currentColor == "Red" ? "C00000" : "0C0C0C")))
                 .frame(56, 56)
                 .overlay {
                   Text("\(vm.currentNumber)")
@@ -84,15 +84,12 @@ struct Simulator: View {
       }
       .transparentIfNot(vm.showPopUp)
       .animation(.easeIn(duration: 0.7),value: vm.showPopUp)
-      
-  
     }
     .navigationBarBackButtonHidden()
     .onAppear {
       vm.currentRadius = vm.w*0.45
     }
   }
-  
   
   private var bg: some View {
     Image(.mbg)
@@ -225,8 +222,6 @@ struct Simulator: View {
               Image(.xbtn)
                 .resizableToFit(height: 40)
             }
-           
-
           }
           .padding(.trailing)
         }

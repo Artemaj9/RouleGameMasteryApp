@@ -82,13 +82,12 @@ struct MainView: View {
             .frame(height: 180)
                 
             okBtn
-              .offset(y: vm.isSEight ? -24 : 12)
-            
+              .offset(y: vm.isSEight ? -24 : 0)
           }
         }
         .offset(y: 20)
         .vPadding()
-        .presentationDetents([.fraction(vm.isSEight ? 0.4 : 0.35)])
+        .presentationDetents([.fraction(vm.isSEight ? 0.4 : 0.33)])
         .background(BackgroundClearView(color: Color(hex: "808080").opacity(0.1)))
         .background(.ultraThinMaterial)
       }

@@ -100,6 +100,7 @@ struct History: View {
               Color.clear.height(200)
             }
           }
+          .scrollMask(location1: 0, location2: 0.05, location3: 0.95, location4: 1)
           .yOffset(vm.h*0.12)
           .yOffset(vm.isSEight ? 12 : 0)
           .scrollIndicators(.hidden)
@@ -107,8 +108,7 @@ struct History: View {
           Text("No calculations yet")
             .rouleFont(size: 30, style: .interB, color: Color(hex: "#F3D9A5"))
         }
-        
-        
+       
         topSection
         
         if vm.showDeletePopUp {
